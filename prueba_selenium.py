@@ -15,6 +15,14 @@ writeUserPassword = input("Contraseña:")
 
 time.sleep(1)
 
+# Crear la variable para el reporte HTML
+report_html = """
+<html>
+<head><title>Reporte de Acción</title></head>
+<body>
+<h1>Reporte de Acciones</h1>
+"""
+
 # Aqui creo una funcion para guardar capturas de pantallas y sobrescribir las ya existentes.
 def screenshotForSelenium(strPath):
     file_path = strPath
@@ -37,6 +45,7 @@ driver = webdriver.Edge(service=service, options=options)
 
 # Abrir la página de inicio de sesión
 driver.get('https://plataformavirtual.itla.edu.do/login/index.php')
+report_html += "<p>Se accedio al Login del ITLA.</p>\n"
 
 time.sleep(2)
 
@@ -56,9 +65,11 @@ try:
     
     # Captura de pantalla del Login:
     screenshotForSelenium('./capturas/01CapturaLogin.png')
-    
+    report_html += "<p>Captura de pantalla del Login tomada.</p>\n"
+
     # Hacer clic en el botón de login
     login_button.click()
+    report_html += "<p>Se hizo clic en el botón de login.</p>\n"
 
     """ # Verificar si el login fue exitoso
     try:
@@ -69,54 +80,70 @@ try:
     
 except Exception as e:
     print(f"Error al cargar la página o realizar el login: {e}")
+    report_html += f"<p>Error al cargar la página o realizar el login: {e}</p>\n"
 
 # 2 --------------------------------------------------------------------------------------------------------------------
 
 # Vamos a la pagina principal:
 driver.get('https://plataformavirtual.itla.edu.do/')
+report_html += "<p>Se accedio a la pantalla principal.</p>\n"
 
 time.sleep(2)
 
 # Captura de pantalla de los cursos:
 screenshotForSelenium('./capturas/02CapturaPaginaPrincipal.png')
+report_html += "<p>Captura de pantalla de la Página Principal tomada.</p>\n"
 
 # 3 --------------------------------------------------------------------------------------------------------------------
 
 # Vamos a la pagina de Programacion 3:
 driver.get('https://plataformavirtual.itla.edu.do/course/view.php?id=8791')
+report_html += "<p>Se accedio al curso P3.</p>\n"
 
 time.sleep(2)
 
 # Captura de pantalla de los cursos:
 screenshotForSelenium('./capturas/03CapturaCursoProgramacion3.png')
+report_html += "<p>Captura de pantalla de P3 fue tomada.</p>\n"
 
 # 4 --------------------------------------------------------------------------------------------------------------------
 
 # Vamos a la pagina de Programacion 3:
 driver.get('https://plataformavirtual.itla.edu.do/mod/assign/view.php?id=686211')
+report_html += "<p>Se accedio a la tarea 4 de P3.</p>\n"
 
 time.sleep(2)
 
-# Captura de pantalla de los cursos:
+# Captura de pantalla de la tarea 4:
 screenshotForSelenium('./capturas/04CapturaCursoP3Tarea4.png')
+report_html += "<p>Captura de pantalla de la tarea 4 de P3 fue tomada.</p>\n"
 
 # 5 --------------------------------------------------------------------------------------------------------------------
 
 # Vamos a la pagina de Programacion 3:
 driver.get('https://plataformavirtual.itla.edu.do/login/logout.php?')
+report_html += "<p>Se accedio a la pagina de cerrar sesion.</p>\n"
 
 time.sleep(2)
 
-# Captura de pantalla de los cursos:
+# Captura de pantalla de cerrar sesion:
 screenshotForSelenium('./capturas/05CapturaCerrarSesion.png')
+report_html += "<p>Captura de pantalla de cerrar sesion fue tomada.</p>\n"
 
+report_html += "<p>Se cerró el navegador.</p>\n"
+
+# Finalizar y guardar el archivo HTML
+report_html += """
+</body>
+</html>
+"""
+
+# Guardar el reporte en un archivo HTML
+with open('reporte_acciones.html', 'w') as file:
+    file.write(report_html)
+
+print("El reporte de acciones ha sido guardado como 'reporte_acciones.html'.")
 # 6 --------------------------------------------------------------------------------------------------------------------
-
-# Hacemos click en el boton continuar para acabar de cerrar sesion:
-logout_button = driver.find_element(By.ID, 'single_button6743c3e25731b20')
-logout_button.click()
-
-screenshotForSelenium('./capturas/06CapturaDeVueltaAlLogin.png')
 
 # Cerrar el navegador cuando se termine -------------------------------------------------------------------------------
 driver.quit()
